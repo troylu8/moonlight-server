@@ -1,2 +1,2 @@
 # moonlight-server
- server for moonlight
+server for moonlight
