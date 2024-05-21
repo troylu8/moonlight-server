@@ -1,0 +1,23 @@
+{
+    "name": "moonlight-server",
+    "version": "1.0.0",
+    "main": "js/index.js",
+    "description": "",
+    "license": "ISC",
+    "scripts": {
+        "start": "electron .",
+        "rebuild": "electron-rebuild -f -w better-sqlite3",
+        "//note": "dont forget that `npm rebuild` is NOT the same as `npm run rebuild` !!! "
+    },
+    "dependencies": {
+        "adm-zip": "^0.5.12",
+        "bcrypt": "^5.1.1",
+        "better-sqlite3": "^9.6.0",
+        "cors": "^2.8.5",
+        "electron-rebuild": "^3.2.9",
+        "express": "^4.19.2"
+    },
+    "devDependencies": {
+        "electron": "^30.0.6"
+    }
+}
