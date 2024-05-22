@@ -5,7 +5,6 @@ const { join } = require("path");
 const { promisify } = require('util');
 const { db } = require("./reception.js");
 const bcrypt = require('bcrypt');
-const { Writable, Duplex, Readable } = require('stream');
 
 
 fs.mkdir(__dirname + "/../userfiles", {recursive: true}, () => {});
@@ -62,7 +61,7 @@ router.put("/userdata/:uid/:username/:hash1", express.text(), async (req, res) =
 /** new files in req.body, files to be deleted in header separated by "-" */
 router.put("/edit/:uid/:hash1/:deleteMe", async (req, res) => {
     const start = Date.now();
-    console.log("receieved edit req at ", start);
+    //console.log("receieved edit req at ", start);
 
     const row = db.prepare("SELECT hash2 FROM users WHERE uid=? ").get(req.params["uid"]);
     if (!row) return res.status(404).end()
@@ -89,19 +88,20 @@ router.put("/edit/:uid/:hash1/:deleteMe", async (req, res) => {
         bufList.add(chunk);
     });
     req.on("end", async () => {
-        console.log("concating received data");
+        //console.log("concating received data");
         const receievedZip = new Zip(bufList.concat());
 
         for (const entry of receievedZip.getEntries()) {
             userZip.addFile(entry.entryName, await getDataPromise(entry));
-            console.log("added ", entry.entryName);
+
+            //console.log("added ", entry.entryName);
         }
 
         await userZip.writeZipPromise(zipPath);
 
         const end = Date.now();
-        console.log("done editing at", end);
-        console.log("total editing time", end - start);
+        //console.log("done editing at", end);
+        //console.log("total editing time", end - start);
         res.end();
     });
 
@@ -109,8 +109,8 @@ router.put("/edit/:uid/:hash1/:deleteMe", async (req, res) => {
 
 router.put('/order/:uid/:hash1', express.json(), async (req, res) => {
 
-    console.log("received order request at ", Date.now());
-    console.log("req.body is ", req.body);
+    //console.log("received order request at ", Date.now());
+    //console.log("req.body is ", req.body);
 
     const row = db.prepare("SELECT hash2 FROM users WHERE uid=? ").get(req.params["uid"]);
     if (!row) return res.status(404).end()
@@ -118,7 +118,7 @@ router.put('/order/:uid/:hash1', express.json(), async (req, res) => {
     
     const zipPath = join(__dirname, "../userfiles", req.params["uid"] + ".zip");
     if (!(await fileExists(zipPath)))  {
-        console.log("doesnt exist");
+        //console.log("doesnt exist");
         return res.status(404).end();
     }
     const userZip = new Zip(zipPath);
@@ -129,11 +129,11 @@ router.put('/order/:uid/:hash1', express.json(), async (req, res) => {
         for (const path of req.body.sendToClient) {
             const entry = userZip.getEntry(path);
             toClient.addFile(entry.entryName, await getDataPromise(entry));
-            console.log("preparing to send", entry.entryName);
+            //console.log("preparing to send", entry.entryName);
         }
     } catch (err) {throw err;}
 
-    console.log("beginning return at ", Date.now());
+    //console.log("beginning return at ", Date.now());
     res.end(await toClient.toBufferPromise());
 });
 

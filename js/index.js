@@ -15,7 +15,7 @@ https.createServer({
     key: fs.readFileSync( __dirname + "/../auth/server.key", "utf8"),
     cert: fs.readFileSync( __dirname + "/../auth/server.crt", "utf8"),
 }, server)
-    .listen(39999, () => console.log("server listening.."));
+    .listen(39999, () => //console.log("server listening.."));
 
 app.whenReady().then(() => {
     const tray = new Tray(__dirname + "/../resources/moonlight.ico");
