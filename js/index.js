@@ -38,4 +38,4 @@ app.whenReady().then(() => {
     
     tray.setToolTip("moonlight server");
     tray.setContextMenu(contextMenu);
-});
+}));
